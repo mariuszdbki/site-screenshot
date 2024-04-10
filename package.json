@@ -1,0 +1,23 @@
+{
+  "name": "site-screenshot",
+  "version": "0.0.1",
+  "description": "using selenium takes screenshot of a site and exposes it via html page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariuszdbki/site-screenshot.git"
+  },
+  "author": "mariuszdbki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mariuszdbki/site-screenshot/issues"
+  },
+  "homepage": "https://github.com/mariuszdbki/site-screenshot#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "selenium-webdriver": "^4.19.0"
+  }
+}
