@@ -6,6 +6,8 @@ const httpPort = 3300;
 
 const seleniumUrl = process.env.SELENIUM_URL; // e.g. http://selenium.grid:4444/wd/hub
 const websiteUrl = process.env.WEBSITE_URL;
+const browserWindowWidth = process.env.BROWSER_WINDOW_WIDTH || 600;
+const browserWindowHeight = process.env.BROWSER_WINDOW_HEIGHT || 800;
 
 app.get('/:url?', async (req, res) => {
     
@@ -16,10 +18,16 @@ app.get('/:url?', async (req, res) => {
     }
 
     let options = new firefox.Options();
+    options.addArguments([
+        '--headless',
+        `--width=${browserWindowWidth}`,
+        `--height=${browserWindowHeight}`
+    ]);
+
     const driver = await new webdriver.Builder()
         .forBrowser(webdriver.Browser.FIREFOX)
         .usingServer(seleniumUrl)
-        .setFirefoxOptions(options.addArguments('--headless'))
+        .setFirefoxOptions(options)
         .build();
 
     await driver.manage().setTimeouts({ implicit: 5000 }); // 5s
