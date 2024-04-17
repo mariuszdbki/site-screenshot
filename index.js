@@ -33,7 +33,7 @@ async function serveRequest(req, res) {
             return;
         }
 
-        let url = req.body?.url || websiteUrl;
+        let url = req.params.url || req.body.url || websiteUrl;
         if (!url) {
             res.status(404).send('No proper URL provided!');
             return;
@@ -57,7 +57,7 @@ createDriver().catch(error => {
 
 app.use(express.json());
 
-app.all('/', serveRequest);
+app.all('/:url?', serveRequest);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
