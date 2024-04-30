@@ -18,15 +18,37 @@ const firefoxOptions = new firefox.Options();
 let driver;
 
 async function createDriver() {
-    driver = await new webdriver.Builder()
-    .forBrowser(webdriver.Browser.FIREFOX)
-    .usingServer(seleniumUrl)
-    .setFirefoxOptions(firefoxOptions)
-    .build();
+    try {
+      driver = await new webdriver.Builder()
+      .forBrowser(webdriver.Browser.FIREFOX)
+      .usingServer(seleniumUrl)
+      .setFirefoxOptions(firefoxOptions)
+      .build();
+    } catch (error) {
+        console.error('Failed to initialize Selenium WebDriver:', error);
+        process.exit(1);
+    }
+}
+
+async function assureDriverActive() {
+  if (!driver) {
+    createDriver();
+  }
+  else {
+    try {
+      await driver.getCurrentUrl();
+    } catch (err) {
+      driver.quit();
+      createDriver();
+    }
+  }
 }
 
 async function serveRequest(req, res) {
     try {
+
+        assureDriverActive();
+
         if (!driver) {
             console.error('Selenium WebDriver not initialized!');
             res.status(500).send('Failed to take screenshot (webdriver not initialized)');
@@ -50,10 +72,7 @@ async function serveRequest(req, res) {
     }   
 }
 
-createDriver().catch(error => {
-    console.error('Failed to initialize Selenium WebDriver:', error);
-    process.exit(1); 
-});
+createDriver();
 
 app.use(express.json());
 
