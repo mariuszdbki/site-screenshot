@@ -6,7 +6,7 @@ const app = express();
 const httpPort = 3300;
 
 const seleniumUrl = process.env.SELENIUM_URL; // e.g. http://selenium.grid:4444/wd/hub
-const websiteUrl = process.env.WEBSITE_URL || 'https://al.edu.pl';
+const websiteUrl = process.env.WEBSITE_URL;
 const browserWindowWidth = process.env.BROWSER_WINDOW_WIDTH || 600;
 const browserWindowHeight = process.env.BROWSER_WINDOW_HEIGHT || 800;
 
