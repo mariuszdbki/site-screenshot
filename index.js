@@ -6,7 +6,7 @@ const app = express();
 const httpPort = 3300;
 
 const seleniumUrl = process.env.SELENIUM_URL; // e.g. http://selenium.grid:4444/wd/hub
-const websiteUrl = process.env.WEBSITE_URL;
+const websiteUrl = process.env.WEBSITE_URL || 'https://al.edu.pl';
 const browserWindowWidth = process.env.BROWSER_WINDOW_WIDTH || 600;
 const browserWindowHeight = process.env.BROWSER_WINDOW_HEIGHT || 800;
 
@@ -15,23 +15,26 @@ const firefoxOptions = new firefox.Options();
     firefoxOptions.addArguments(`--width=${browserWindowWidth}`);
     firefoxOptions.addArguments(`--height=${browserWindowHeight}`);
 
+let creatingDriver = false;    
 let driver;
 
 async function createDriver() {
-    try {
-      driver = await new webdriver.Builder()
-      .forBrowser(webdriver.Browser.FIREFOX)
-      .usingServer(seleniumUrl)
-      .setFirefoxOptions(firefoxOptions)
-      .build();
-    } catch (error) {
-        console.error('Failed to initialize Selenium WebDriver:', error);
-        process.exit(1);
-    }
+  creatingDriver = true;
+  try {
+    driver = await new webdriver.Builder()
+    .forBrowser(webdriver.Browser.FIREFOX)
+    .usingServer(seleniumUrl)
+    .setFirefoxOptions(firefoxOptions)
+    .build();
+  } catch (error) {
+      console.error('Failed to initialize Selenium WebDriver:', error);
+      process.exit(1);
+  }
+  creatingDriver = false;
 }
 
 async function assureDriverActive() {
-  if (!driver) {
+  if (!driver && !creatingDriver) {
     createDriver();
   }
   else {
